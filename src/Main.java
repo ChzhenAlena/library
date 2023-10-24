@@ -1,10 +1,14 @@
 import controller.ConsoleManager;
 import controller.Library;
 import model.User;
-//todo шифровать пароль
+
 //todo email при добавлении книги
 //todo email при предложении книги
 //todo проверка вводимых значений, особенно bookType
+//todo кодировка при шифровании пароля
+//todo постраничный просмотр каталога
+//todo постоянный ключ
+//todo нормальное добавление пользоваьеля в пустой файл
 public class Main {
     public static void main(String[] args) {
         Library library = new Library();

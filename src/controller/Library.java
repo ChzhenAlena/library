@@ -1,16 +1,19 @@
 package controller;
 import model.*;
-
+//строка 45!!!
 public class Library {
     private Catalog catalog;
     private UserBase userBase;
     private FileManager fileManager;
     private ConsoleManager console;
+    private EmailSender emailSender;
     public Library(){
         catalog = new Catalog();
         userBase = new UserBase();
         fileManager = new FileManager();
         console = new ConsoleManager();
+        emailSender = new EmailSender("mail", "pass");
+        Encryptor.initEncryptor();
     }
 
     public void downloadData(){
@@ -22,8 +25,8 @@ public class Library {
         String email = console.getString();
         System.out.println("Введите пароль");
         String password = console.getString();
-        return userBase.logIn(email, password);
-
+        String encryptedPassword = Encryptor.encrypt(password);
+        return userBase.logIn(email, encryptedPassword);
     }
     public User logOut(){
         return null;
@@ -65,6 +68,7 @@ public class Library {
         Book book = new Book(type, name, author, year, description);
         catalog.addBook(book);
         fileManager.addBook(book);
+        emailSender.sendToAll("Добавлена новая книга", book.toString(), userBase);
         //todo сообщение пользователям
     };
     public void deleteBook(){
