@@ -16,6 +16,7 @@ public class ConsoleManager {
         scanner.nextLine();
         return number;
     }
+
     public void printStartMenu(){
         String menu = "1. Войти в систему\n" +
                 "2. Регистрация\n" +
@@ -36,4 +37,5 @@ public class ConsoleManager {
                 "4. Выйти из системы";
         System.out.println(menu);
     }
+
 }

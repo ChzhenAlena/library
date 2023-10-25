@@ -69,7 +69,6 @@ public class Library {
         catalog.addBook(book);
         fileManager.addBook(book);
         emailSender.sendToAll("Добавлена новая книга", book.toString(), userBase);
-        //todo сообщение пользователям
     };
     public void deleteBook(){
         System.out.println("Введите название книги");
@@ -82,5 +81,18 @@ public class Library {
         String bookName = console.getString();
         System.out.println(catalog.findBook(bookName).toString());
     };
-    public void offerBook(){};
+    public void offerBook(){
+        System.out.println("Введите тип (Paper/Electronic)");
+        Book.bookType type = Book.bookType.valueOf(console.getString());
+        System.out.println("Введите название");
+        String name = console.getString();
+        System.out.println("Введите автора");
+        String author = console.getString();
+        System.out.println("Введите год");
+        int year = console.getNumber();
+        System.out.println("Введите описание");
+        String description = console.getString();
+        Book book = new Book(type, name, author, year, description);
+        emailSender.sendToAdmins("Давайте добавим книгу", book.toString(), userBase);
+    };
 }

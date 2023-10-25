@@ -25,4 +25,12 @@ public abstract class User {
         return str;
     }
 
+    /*public boolean equals(Object obj){
+        if(obj == this)
+            return true;
+        if(obj == null || (obj.getClass() != this.getClass()))
+            return false;
+        User u = (User) obj;
+        return this.email == u.getEmail();//и password
+    }*/
 }

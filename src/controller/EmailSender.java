@@ -1,3 +1,4 @@
+//используется smtp-сервер google. В качестве пароля отправителя необходимо использовать app passwords
 package controller;
 
 import model.Admin;
@@ -23,8 +24,8 @@ public class EmailSender {
     private Properties props;
     private static String smtp = "smtp.gmail.com";
     EmailSender(String username, String password){
-        this.username = username;
-        this.password = password;
+        this.username = "alenakuzmina629@gmail.com";
+        this.password = "msqcmbcoomtfonyx";
         props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -42,7 +43,8 @@ public class EmailSender {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));//??????????? или from?
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            //message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("kuzya295@mail.ru"));
             message.setSubject(header);
             message.setText(text);
 
