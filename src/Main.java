@@ -6,9 +6,7 @@ import model.User;
 //todo email при предложении книги
 //todo проверка вводимых значений, особенно bookType
 //todo кодировка при шифровании пароля
-//todo постраничный просмотр каталога
-//todo постоянный ключ
-//todo нормальное добавление пользоваьеля в пустой файл
+//todo постраничный просмотр каталога?
 public class Main {
     public static void main(String[] args) {
         Library library = new Library();
@@ -16,8 +14,6 @@ public class Main {
         ConsoleManager console = new ConsoleManager();
         User user = null;
         int answer;
-
-
         while(true) {
             if (user == null) {
                 console.printStartMenu();

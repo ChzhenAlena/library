@@ -82,7 +82,8 @@ public class FileManager {
         }
         try(FileWriter writer = new FileWriter(usersFile, true))
         {
-            writer.append('\n');
+            if(usersFile.length() != 0L)
+                writer.append('\n');
             writer.write(user.getEmail());
             writer.append(' ');
             writer.write(user.getPassword());
