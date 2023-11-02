@@ -13,7 +13,7 @@ public class Library {
         fileManager = new FileManager();
         console = new ConsoleManager();
         emailSender = new EmailSender("mail", "pass");
-        Encryptor.initEncryptor();
+        //Encryptor.initEncryptor();
     }
 
     public void downloadData(){
@@ -25,8 +25,7 @@ public class Library {
         String email = console.getString();
         System.out.println("Введите пароль");
         String password = console.getString();
-        String encryptedPassword = Encryptor.encrypt(password);
-        return userBase.logIn(email, encryptedPassword);
+        return userBase.logIn(email, password);
     }
     public User logOut(){
         return null;
@@ -36,14 +35,13 @@ public class Library {
         String email = console.getString();
         System.out.println("Введите пароль");
         String password = console.getString();
-        String encpyptedPassword = Encryptor.encrypt(password);
         System.out.println("Вы админ? 0 - нет, 1 - да");
         int isAdmin = console.getNumber();
-        User user = null;//
+        User user = null;
         if(isAdmin == 0)
-            user = new RegularUser(email, encpyptedPassword);
+            user = new RegularUser(email, password);
         if(isAdmin == 1)
-            user = new Admin(email, encpyptedPassword);//проверка?
+            user = new Admin(email, password);
         userBase.addUser(user);
         fileManager.addUser(user);
         System.out.println("Вы зарегестрированы");

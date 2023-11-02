@@ -1,7 +1,7 @@
 import controller.ConsoleManager;
 import controller.Library;
 import model.User;
-
+//todo filemanager упростить код, связанный с шифровкой пароля(млишком много конвертации)
 //todo email при добавлении книги
 //todo email при предложении книги
 //todo проверка вводимых значений, особенно bookType

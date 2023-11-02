@@ -4,6 +4,7 @@ import javax.crypto.*;
 import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.Arrays;
 
 
 public class Encryptor {
@@ -14,7 +15,7 @@ public class Encryptor {
     static final char[] keyStorePassword = "123abc".toCharArray();
     static final char[] keyPassword = "789xyz".toCharArray();
     static final String alias = "keyAlias";
-    static final String keyStoreDirectory = "src/files/keystore.ks";
+    static final String keyStoreDirectory = "src/files/keystore.jks";
     public static void initEncryptor(){
         try {
             keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -28,26 +29,6 @@ public class Encryptor {
         else
             key = loadKey();
     }
-
-    public static String encrypt(String pass){
-        byte[] password;
-        Cipher cipher = null;
-        byte[] cipherPass;
-        String encryptedPass;
-        try {
-            cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            password = pass.getBytes("UTF-8");
-            cipherPass = cipher.doFinal(password);
-            encryptedPass = new String(cipherPass, "UTF-8");
-        } catch (IllegalBlockSizeException | UnsupportedEncodingException | BadPaddingException |
-                 NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-        return encryptedPass;
-    }
-
-
     public static SecretKey generateKey() {
         KeyGenerator keyGenerator;
         try {
@@ -75,7 +56,6 @@ public class Encryptor {
         }
         return key;
     }
-
     public static SecretKey loadKey(){
         try(InputStream keyStoreData = new FileInputStream(keyStoreDirectory)){
             keyStore.load(keyStoreData, keyStorePassword);
@@ -89,5 +69,45 @@ public class Encryptor {
             throw new RuntimeException(e);
         }
         return keyEntry.getSecretKey();
+    }
+    public static byte[] encrypt(String pass){
+        byte[] password;
+        Cipher cipher = null;
+        byte[] cipherPass;
+        try {
+            cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            password = pass.getBytes("UTF-8");
+            cipherPass = cipher.doFinal(password);
+        } catch (IllegalBlockSizeException | UnsupportedEncodingException | BadPaddingException |
+                 NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+        return cipherPass;
+    }
+    public static String decrypt(byte[] encryptedPass){
+        Cipher cipher = null;
+        byte[] pass;
+        String decryptedPass;
+        try {
+            cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            pass = cipher.doFinal(encryptedPass);
+            decryptedPass = new String(pass, "UTF-8");
+        } catch (IllegalBlockSizeException | UnsupportedEncodingException | BadPaddingException |
+                 NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+        return decryptedPass;
+    }
+    public static void main(String[] args){
+        initEncryptor();
+        byte[] enc = encrypt("abchjhkfddjgfhkgjhgjh");
+        System.out.println(enc[0]);
+        String s = String.valueOf(enc[0]);
+        System.out.println(s);
+        int i = 116;
+        byte r = Byte.valueOf(String.valueOf(i));
+        System.out.println(r);
     }
 }

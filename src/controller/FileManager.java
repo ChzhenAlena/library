@@ -2,6 +2,8 @@ package controller;
 
 import java.io.*;
 //import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import model.*;
 
@@ -13,6 +15,7 @@ public class FileManager {
         this.directory = new File(directory);
         bookFile = new File(directory + "/" + "books.txt");
         usersFile = new File(directory + "/" + "users.txt");
+        Encryptor.initEncryptor();
     }
     FileManager(){
         this("src/files");
@@ -30,8 +33,21 @@ public class FileManager {
             User user;
             while(scanner.hasNext()){
                 em = scanner.next();
-                pass = scanner.next();
-                isAdmin = scanner.nextInt();
+                int a = 0;
+                byte b = 0;
+                ArrayList<Byte> passwordBytes = new ArrayList<Byte>();
+                while(scanner.hasNextInt()) {
+                    a = scanner.nextInt();
+                    b = Byte.valueOf(String.valueOf(a));
+                    passwordBytes.add(b);
+                }
+                passwordBytes.remove((passwordBytes.size()-1));
+                byte[] encryptedPass = new byte[passwordBytes.size()];
+                for(int i = 0; i < passwordBytes.size(); i++){
+                    encryptedPass[i] = Byte.valueOf(passwordBytes.get(i));
+                }
+                pass = Encryptor.decrypt(encryptedPass);
+                isAdmin = a;
                 if(isAdmin == 1)
                     user = new Admin(em, pass);
                 else
@@ -86,12 +102,18 @@ public class FileManager {
                 writer.append('\n');
             writer.write(user.getEmail());
             writer.append(' ');
-            writer.write(user.getPassword());
+            byte[] encryptedPassword = Encryptor.encrypt(user.getPassword());
+            for(byte b : encryptedPassword) {
+                System.out.println(String.valueOf(b));
+                writer.write(String.valueOf(b));
+                writer.append(' ');
+            }
             writer.append(' ');
             if(user instanceof RegularUser)
                 writer.append('0');
             else
                 writer.append('1');
+            //writer.append(" ;");
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
@@ -148,4 +170,7 @@ public class FileManager {
         bookFile.delete();
         newFile.renameTo(bookFile);
     }
+
+
+
 }
