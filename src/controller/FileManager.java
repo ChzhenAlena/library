@@ -104,7 +104,6 @@ public class FileManager {
             writer.append(' ');
             byte[] encryptedPassword = Encryptor.encrypt(user.getPassword());
             for(byte b : encryptedPassword) {
-                System.out.println(String.valueOf(b));
                 writer.write(String.valueOf(b));
                 writer.append(' ');
             }

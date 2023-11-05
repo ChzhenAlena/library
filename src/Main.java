@@ -5,7 +5,6 @@ import model.User;
 //todo email при добавлении книги
 //todo email при предложении книги
 //todo проверка вводимых значений, особенно bookType
-//todo кодировка при шифровании пароля
 //todo постраничный просмотр каталога?
 public class Main {
     public static void main(String[] args) {

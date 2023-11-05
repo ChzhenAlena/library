@@ -1,4 +1,5 @@
 //используется smtp-сервер google. В качестве пароля отправителя необходимо использовать app passwords
+//не полечается отправить сообщение, если в списке невалидная почта (sendpartial не помогает). Пробуем валидатор
 package controller;
 
 import model.Admin;
@@ -17,7 +18,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 
-
 public class EmailSender {
     private String username;
     private String password;
@@ -30,8 +30,10 @@ public class EmailSender {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.sendpartial", "true");//не работает
         props.put("mail.smtp.host", smtp);
         props.put("mail.smtp.port", "465");
+
     }
     public void send(String header, String text, String from, String to){
         Session session = Session.getInstance(props, new Authenticator() {
@@ -43,17 +45,16 @@ public class EmailSender {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));//??????????? или from?
-            //message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("kuzya295@mail.ru"));
             message.setSubject(header);
             message.setText(text);
 
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             Transport.send(message);
             System.out.println("Сообщение отправлено!");
 
         } catch (MessagingException e) {
             System.out.println("Ошибка отпраки email");
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
     public void sendToAdmins(String header, String text, UserBase userBase) {
@@ -73,6 +74,8 @@ public class EmailSender {
             users.append(user.getEmail());
             users.append(", ");
         }
+
         send(header, text, username, users.toString());
     }
+
 }
