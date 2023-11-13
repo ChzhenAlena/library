@@ -1,5 +1,5 @@
 //используется smtp-сервер google. В качестве пароля отправителя необходимо использовать app passwords
-//не полечается отправить сообщение, если в списке невалидная почта (sendpartial не помогает). Пробуем валидатор
+//не полечается отправить сообщение, если в списке невалидная почта (sendpartial не помогает).
 package controller;
 
 import model.Admin;
@@ -35,20 +35,26 @@ public class EmailSender {
         props.put("mail.smtp.port", "465");
 
     }
-    public void send(String header, String text, String from, String to){
+    public void send(String header, String text, UserBase to){
         Session session = Session.getInstance(props, new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);
                     }
                 });
-
+        Message message = new MimeMessage(session);
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));//??????????? или from?
+            message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
             message.setSubject(header);
             message.setText(text);
 
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            StringBuilder emails = new StringBuilder();
+            for (User user : to.getUserList()) {
+                    emails.append(user.getEmail());
+                    emails.append(", ");
+            }
+            String emailsToSend = emails.toString();
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailsToSend));
             Transport.send(message);
             System.out.println("Сообщение отправлено!");
 
@@ -56,26 +62,7 @@ public class EmailSender {
             System.out.println("Ошибка отпраки email");
             //throw new RuntimeException(e);
         }
-    }
-    public void sendToAdmins(String header, String text, UserBase userBase) {
-        StringBuilder admins = new StringBuilder();
-        for (User user : userBase.getUserList()) {
-            if (user instanceof Admin) {
-                admins.append(user.getEmail());
-                admins.append(", ");
-            }
-        }
-        send(header, text, username, admins.toString());
-    }
 
-    public void sendToAll(String header, String text, UserBase userBase) {
-        StringBuilder users = new StringBuilder();
-        for (User user : userBase.getUserList()) {
-            users.append(user.getEmail());
-            users.append(", ");
-        }
 
-        send(header, text, username, users.toString());
     }
-
 }

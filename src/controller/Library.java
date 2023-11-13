@@ -66,7 +66,7 @@ public class Library {
         Book book = new Book(type, name, author, year, description);
         catalog.addBook(book);
         fileManager.addBook(book);
-        emailSender.sendToAll("Добавлена новая книга", book.toString(), userBase);
+        emailSender.send("Добавлена новая книга", book.toString(), userBase);
     };
     public void deleteBook(){
         System.out.println("Введите название книги");
@@ -91,6 +91,11 @@ public class Library {
         System.out.println("Введите описание");
         String description = console.getString();
         Book book = new Book(type, name, author, year, description);
-        emailSender.sendToAdmins("Давайте добавим книгу", book.toString(), userBase);
+        UserBase userBaseAdmins = new UserBase();
+        for(User u : userBase.getUserList()){
+            if(u instanceof Admin)
+                userBaseAdmins.addUser(u);
+        }
+        emailSender.send("Давайте добавим книгу", book.toString(), userBaseAdmins);
     };
 }
