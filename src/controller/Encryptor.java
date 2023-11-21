@@ -100,14 +100,4 @@ public class Encryptor {
         }
         return decryptedPass;
     }
-    public static void main(String[] args){
-        initEncryptor();
-        byte[] enc = encrypt("abchjhkfddjgfhkgjhgjh");
-        System.out.println(enc[0]);
-        String s = String.valueOf(enc[0]);
-        System.out.println(s);
-        int i = 116;
-        byte r = Byte.valueOf(String.valueOf(i));
-        System.out.println(r);
-    }
 }
