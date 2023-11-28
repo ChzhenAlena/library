@@ -24,8 +24,8 @@ public class EmailSender {
     private Properties props;
     private static String smtp = "smtp.gmail.com";
     EmailSender(String username, String password){
-        this.username = "alenakuzmina629@gmail.com";
-        this.password = "msqcmbcoomtfonyx";
+        this.username = "...";
+        this.password = "...";//использовать app passwords google
         props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.socketFactory.port", "465");
