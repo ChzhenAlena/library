@@ -47,4 +47,7 @@ public class Book {
         String str = "Name: " + name + ", author: " + author + ", year:" + year + ", description: " + description;
         return str;
     }
+    public String getStringForWritingToFile(){
+        return type + " " + name + " " + author + " " + year + "\n" + description + "\n";
+    }
 }

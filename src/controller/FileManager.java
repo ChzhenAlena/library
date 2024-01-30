@@ -130,16 +130,7 @@ public class FileManager {
         }
         try(FileWriter writer = new FileWriter(bookFile, true))
         {
-            writer.append('\n');
-            writer.write(book.getType());
-            writer.append(' ');
-            writer.write(book.getName());
-            writer.append(' ');
-            writer.write(book.getAuthor());
-            writer.append(' ');
-            writer.write(String.valueOf(book.getYear()));
-            writer.append('\n');
-            writer.write(book.getDescription());
+            writer.write(book.getStringForWritingToFile());
             System.out.println("Книга добавлена в файл");
         }
         catch(IOException ex){
@@ -151,16 +142,7 @@ public class FileManager {
         for(Book book : catalog.getBooks()){
             try(FileWriter writer = new FileWriter(newFile, true))
             {
-                writer.write(book.getType());
-                writer.append(' ');
-                writer.write(book.getName());
-                writer.append(' ');
-                writer.write(book.getAuthor());
-                writer.append(' ');
-                writer.write(String.valueOf(book.getYear()));
-                writer.append('\n');
-                writer.write(book.getDescription());
-                writer.append('\n');
+                writer.write(book.getStringForWritingToFile());
             }
             catch(IOException ex){
                 System.out.println(ex.getMessage());
