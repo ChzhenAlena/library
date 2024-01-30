@@ -17,9 +17,9 @@ public class UserBase {
     public ArrayList<User> getUserList(){
         return users;
     }
-    public User logIn(String email, String password){
+    public User logIn(User user){
         for(User u : users){
-            if(u.getEmail().equals(email) && u.getPassword().equals(password)) {
+            if(user.equals(u)) {
                 System.out.println("Вы вошли в систему");
                 return u;
             }

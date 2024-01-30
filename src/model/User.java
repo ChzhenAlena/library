@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class User {
     private String email;
     private String password;
@@ -7,6 +9,10 @@ public class User {
     public User(String email, String password, boolean isAdmin){
         this.email = email;
         this.password = password;
+        this.isAdmin = isAdmin;
+    }
+
+    public User() {
     }
 
     public boolean isAdmin() {
@@ -35,12 +41,16 @@ public class User {
         return str;
     }
 
-    /*public boolean equals(Object obj){
-        if(obj == this)
-            return true;
-        if(obj == null || (obj.getClass() != this.getClass()))
-            return false;
-        User u = (User) obj;
-        return this.email == u.getEmail();//и password
-    }*/
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(email, user.email) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password);
+    }
 }

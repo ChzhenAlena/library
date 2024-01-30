@@ -12,7 +12,7 @@ public class Library {
         userBase = new UserBase();
         fileManager = new FileManager();
         console = new ConsoleManager();
-        emailSender = new EmailSender("mail", "pass");
+        emailSender = new EmailSender();
     }
 
     public void downloadData(){
@@ -20,21 +20,14 @@ public class Library {
         fileManager.downloadBooks(catalog);
     }
     public User logIn(){
-        System.out.println("Введите email");
-        String email = console.getString();
-        System.out.println("Введите пароль");
-        String password = console.getString();
-        return userBase.logIn(email, password);
+        User user = console.getUserFromConsole();
+        return userBase.logIn(user);
     }
     public User logOut(){
         return null;
     };
     public void register(){
-        System.out.println("Введите email");
-        String email = console.getString();
-        System.out.println("Введите пароль");
-        String password = console.getString();
-        User user = new User(email, password, false);
+        User user = console.getUserFromConsole();
         userBase.addUser(user);
         fileManager.addUser(user);
         System.out.println("Вы зарегестрированы");
@@ -42,21 +35,8 @@ public class Library {
     public void showCatalog(){
         catalog.print();
     };
-    public void showUserBase(){
-        userBase.print();
-    };
     public void addBook(){
-        System.out.println("Введите тип (Paper/Electronic)");
-        Book.bookType type = Book.bookType.valueOf(console.getString());
-        System.out.println("Введите название");
-        String name = console.getString();
-        System.out.println("Введите автора");
-        String author = console.getString();
-        System.out.println("Введите год");
-        int year = console.getNumber();
-        System.out.println("Введите описание");
-        String description = console.getString();
-        Book book = new Book(type, name, author, year, description);
+        Book book = console.getBookFromConsole();
         catalog.addBook(book);
         fileManager.addBook(book);
         emailSender.send("Добавлена новая книга", book.toString(), userBase);
@@ -73,17 +53,7 @@ public class Library {
         System.out.println(catalog.findBook(bookName).toString());
     };
     public void offerBook(){
-        System.out.println("Введите тип (Paper/Electronic)");
-        Book.bookType type = Book.bookType.valueOf(console.getString());
-        System.out.println("Введите название");
-        String name = console.getString();
-        System.out.println("Введите автора");
-        String author = console.getString();
-        System.out.println("Введите год");
-        int year = console.getNumber();
-        System.out.println("Введите описание");
-        String description = console.getString();
-        Book book = new Book(type, name, author, year, description);
+        Book book = console.getBookFromConsole();
         UserBase userBaseAdmins = new UserBase();
         for(User u : userBase.getUserList()){
             if(u.isAdmin())

@@ -23,17 +23,18 @@ public class EmailSender {
     private String password;
     private Properties props;
     private static String smtp = "smtp.gmail.com";
-    EmailSender(String username, String password){
+    EmailSender(){
         this.username = "...";
         this.password = "...";//использовать app passwords google
         props = new Properties();
+    }
+    private void setProps(){
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.sendpartial", "true");//не работает
         props.put("mail.smtp.host", smtp);
         props.put("mail.smtp.port", "465");
-
     }
     public void send(String header, String text, UserBase to){
         Session session = Session.getInstance(props, new Authenticator() {
