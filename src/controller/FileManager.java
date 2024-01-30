@@ -65,20 +65,14 @@ public class FileManager {
         }
         try(Scanner scanner = new Scanner(bookFile))
         {
-            String type;
-            String name;
-            String author;
-            int year;
-            String description;
-            Book book;
+            Book book = new Book();
             while(scanner.hasNext()){
-                type = scanner.next();
-                name = scanner.next();
-                author = scanner.next();
-                year = scanner.nextInt();
+                book.setType(Book.bookType.valueOf(scanner.next()));
+                book.setName(scanner.next());
+                book.setAuthor(scanner.next());
+                book.setYear(scanner.nextInt());
                 scanner.nextLine();
-                description = scanner.nextLine();
-                book = new Book(Book.bookType.valueOf(type) ,name, author, year, description);
+                book.setDescription(scanner.nextLine());
                 catalog.addBook(book);
             }
         }

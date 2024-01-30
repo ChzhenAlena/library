@@ -9,12 +9,16 @@ public class Book {
     private String author;
     private int year;
     private String description;
+
     public Book(bookType type, String name, String author, int year, String description){
         this.type = type;
         this.name = name;
         this.author = author;
         this.year = year;
         this.description = description;
+    }
+    public Book(){
+
     }
     public void setName(String name){
         this.name = name;
@@ -28,6 +32,11 @@ public class Book {
     public void setDescription(String description){
         this.description = description;
     }
+
+    public void setType(bookType type) {
+        this.type = type;
+    }
+
     public String getType(){
         return type.toString();
     }

@@ -8,6 +8,11 @@ public class Catalog {
         books = new ArrayList<>();
     }
     public void addBook(Book book){
+        for(Book b : books)
+            if(b.getName().equals(book.getName())){
+                System.out.println("Книга с таким названием уже существует");
+                return;
+            }
         books.add(book);
     }
     public void deleteBook(String bookName){
