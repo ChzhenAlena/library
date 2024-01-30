@@ -4,21 +4,23 @@ import model.*;
 public class Library {
     private final Catalog catalog;
     private final UserBase userBase;
-    private final FileManager fileManager;
+    private final BookFileManager bookFileManager;
+    private final UserFileManager userFileManager;
     private final ConsoleManager console;
     private final EmailSender emailSender;
     public Library(){
         catalog = new Catalog();
         userBase = new UserBase();
-        fileManager = new FileManager();
+        userFileManager = new UserFileManager();
+        bookFileManager = new BookFileManager();
         console = new ConsoleManager();
         emailSender = new EmailSender();
         emailSender.setProps();
     }
 
     public void downloadData(){
-        fileManager.downloadUsers(userBase);
-        fileManager.downloadBooks(catalog);
+        userFileManager.downloadUsers(userBase);
+        bookFileManager.downloadBooks(catalog);
     }
     public User logIn(){
         User user = console.getUserFromConsole();
@@ -30,7 +32,7 @@ public class Library {
     public void register(){
         User user = console.getUserFromConsole();
         userBase.addUser(user);
-        fileManager.addUser(user);
+        userFileManager.addUser(user);
         System.out.println("Вы зарегестрированы");
     };
     public void showCatalog(){
@@ -40,14 +42,14 @@ public class Library {
         Book book = console.getBookFromConsole();
         if(!catalog.addBook(book))
             System.out.println("Книга с таким названием уже есть в базе");
-        fileManager.addBook(book);
+        bookFileManager.addBook(book);
         emailSender.send("Добавлена новая книга", book.toString(), userBase);
     };
     public void deleteBook(){
         System.out.println("Введите название книги");
         String bookName = console.getString();
         catalog.deleteBook(bookName);
-        fileManager.updateBookFile(catalog);
+        bookFileManager.updateBookFile(catalog);
     };
     public void findBook(){
         System.out.println("Введите название книги");
