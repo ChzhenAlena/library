@@ -2,18 +2,17 @@ package controller;
 import model.*;
 //строка 45!!!
 public class Library {
-    private Catalog catalog;
-    private UserBase userBase;
-    private FileManager fileManager;
-    private ConsoleManager console;
-    private EmailSender emailSender;
+    private final Catalog catalog;
+    private final UserBase userBase;
+    private final FileManager fileManager;
+    private final ConsoleManager console;
+    private final EmailSender emailSender;
     public Library(){
         catalog = new Catalog();
         userBase = new UserBase();
         fileManager = new FileManager();
         console = new ConsoleManager();
         emailSender = new EmailSender("mail", "pass");
-        //Encryptor.initEncryptor();
     }
 
     public void downloadData(){
@@ -35,13 +34,7 @@ public class Library {
         String email = console.getString();
         System.out.println("Введите пароль");
         String password = console.getString();
-        System.out.println("Вы админ? 0 - нет, 1 - да");
-        int isAdmin = console.getNumber();
-        User user = null;
-        if(isAdmin == 0)
-            user = new RegularUser(email, password);
-        if(isAdmin == 1)
-            user = new Admin(email, password);
+        User user = new User(email, password, false);
         userBase.addUser(user);
         fileManager.addUser(user);
         System.out.println("Вы зарегестрированы");
@@ -93,7 +86,7 @@ public class Library {
         Book book = new Book(type, name, author, year, description);
         UserBase userBaseAdmins = new UserBase();
         for(User u : userBase.getUserList()){
-            if(u instanceof Admin)
+            if(u.isAdmin())
                 userBaseAdmins.addUser(u);
         }
         emailSender.send("Давайте добавим книгу", book.toString(), userBaseAdmins);

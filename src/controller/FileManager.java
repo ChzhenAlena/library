@@ -8,9 +8,9 @@ import java.util.Scanner;
 import model.*;
 
 public class FileManager {
-    private File directory;
-    private File bookFile;
-    private File usersFile;
+    private final File directory;
+    private final File bookFile;
+    private final File usersFile;
     FileManager(String directory){
         this.directory = new File(directory);
         bookFile = new File(directory + "/" + "books.txt");
@@ -49,9 +49,9 @@ public class FileManager {
                 pass = Encryptor.decrypt(encryptedPass);
                 isAdmin = a;
                 if(isAdmin == 1)
-                    user = new Admin(em, pass);
+                    user = new User(em, pass, true);
                 else
-                    user = new RegularUser(em, pass);
+                    user = new User(em, pass, false);
                 userBase.addUser(user);
             }
         }
@@ -108,7 +108,7 @@ public class FileManager {
                 writer.append(' ');
             }
             writer.append(' ');
-            if(user instanceof RegularUser)
+            if(!user.isAdmin())
                 writer.append('0');
             else
                 writer.append('1');

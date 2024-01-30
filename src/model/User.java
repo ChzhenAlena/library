@@ -1,12 +1,22 @@
 package model;
 
-public abstract class User {
+public class User {
     private String email;
     private String password;
-    User(String email, String password){
+    private boolean isAdmin;
+    public User(String email, String password, boolean isAdmin){
         this.email = email;
         this.password = password;
     }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
     public void setEmail(String email){
         this.email = email;
     }

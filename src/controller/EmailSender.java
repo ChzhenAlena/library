@@ -2,7 +2,7 @@
 //не полечается отправить сообщение, если в списке невалидная почта (sendpartial не помогает).
 package controller;
 
-import model.Admin;
+//import model.Admin;
 import model.UserBase;
 import model.User;
 
@@ -60,7 +60,6 @@ public class EmailSender {
 
         } catch (MessagingException e) {
             System.out.println("Ошибка отпраки email");
-            //throw new RuntimeException(e);
         }
 
 

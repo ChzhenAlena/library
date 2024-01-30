@@ -30,7 +30,7 @@ public class Main {
                 }
             }
 
-            while ((user != null) && (user instanceof model.Admin)) {
+            while (user != null && user.isAdmin()) {
                 console.printAdminMenu();
                 answer = console.getNumber();
                 switch (answer) {
@@ -51,7 +51,7 @@ public class Main {
                 }
 
             }
-            while ((user != null) && (user instanceof model.RegularUser)) {
+            while (user != null && !user.isAdmin()) {
                 console.printUserMenu();
                 answer = console.getNumber();
                 switch (answer) {
