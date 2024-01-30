@@ -4,6 +4,8 @@ import model.Book;
 import model.User;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConsoleManager {
     private Scanner scanner;
@@ -12,7 +14,7 @@ public class ConsoleManager {
     }
     public User getUserFromConsole(){
         System.out.println("Введите email");
-        String email = getString();
+        String email = getEmail();
         System.out.println("Введите пароль");
         String password = getString();
         return new User(email, password, false);
@@ -29,6 +31,20 @@ public class ConsoleManager {
         System.out.println("Введите описание");
         String description = getString();
         return new Book(type, name, author, year, description);
+    }
+    public String getEmail(){
+        String line;
+        Pattern pattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");//for RFC5322
+        Matcher matcher;
+        while(true) {
+            line = scanner.nextLine();
+            matcher = pattern.matcher(line);
+            if(matcher.matches())
+                return line;
+            else {
+                System.out.println("веденный email не соответствует стандарту RFC5322. Введите email заново");
+            }
+        }
     }
     public String getString(){
         String line = scanner.nextLine();
