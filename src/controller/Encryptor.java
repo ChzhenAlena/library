@@ -24,18 +24,20 @@ public class Encryptor {
         }
         entryPassword = new KeyStore.PasswordProtection(keyPassword);
         File keystoreFile = new File(keyStoreDirectory);
-        if (keystoreFile.length() == 0L)
-            key = generateKey();
+        if (keystoreFile.length() == 0L) {
+            try {
+                key = generateKey();
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (KeyStoreException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else
             key = loadKey();
     }
-    public static SecretKey generateKey() {
-        KeyGenerator keyGenerator;
-        try {
-            keyGenerator = KeyGenerator.getInstance("AES");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    public static SecretKey generateKey() throws NoSuchAlgorithmException, KeyStoreException {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(keyBitSize, new SecureRandom());
         SecretKey key = keyGenerator.generateKey();
         try(InputStream keyStoreInputStream = new FileInputStream(keyStoreDirectory)){
@@ -44,11 +46,7 @@ public class Encryptor {
             throw new RuntimeException(e);
         }
         KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(key);
-        try {
-            keyStore.setEntry(alias, secretKeyEntry, entryPassword);
-        } catch (KeyStoreException e) {
-            throw new RuntimeException(e);
-        }
+        keyStore.setEntry(alias, secretKeyEntry, entryPassword);
         try (FileOutputStream keyStoreOutputStream = new FileOutputStream(keyStoreDirectory)) {
             keyStore.store(keyStoreOutputStream, keyStorePassword);
         } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
