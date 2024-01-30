@@ -1,9 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserBase {
-    ArrayList<User> users;
+    List<User> users;
     public UserBase(){
         users = new ArrayList<>();
     }
@@ -14,7 +15,7 @@ public class UserBase {
         for(User u : users)
             System.out.println(u.toString());
     }
-    public ArrayList<User> getUserList(){
+    public List<User> getUserList(){
         return users;
     }
     public User logIn(User user){

@@ -4,6 +4,7 @@ import java.io.*;
 //import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import model.*;
 
@@ -23,45 +24,46 @@ public class FileManager {
 
     public void downloadUsers(UserBase userBase){
         if(!usersFile.exists()) {
-            System.out.println("Файла пользователей не существует");
+            try {
+                if(usersFile.createNewFile())
+                    System.out.println("Файла с пользователями не существует. Был создан новый пустой файл.");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         try(Scanner scanner = new Scanner(usersFile))
         {
-            String em;
-            String pass;
-            int isAdmin;
-            User user;
             while(scanner.hasNext()){
-                em = scanner.next();
-                int a = 0;
-                byte b = 0;
-                ArrayList<Byte> passwordBytes = new ArrayList<Byte>();
-                while(scanner.hasNextInt()) {
-                    a = scanner.nextInt();
-                    b = Byte.valueOf(String.valueOf(a));
-                    passwordBytes.add(b);
-                }
-                passwordBytes.remove((passwordBytes.size()-1));
-                byte[] encryptedPass = new byte[passwordBytes.size()];
-                for(int i = 0; i < passwordBytes.size(); i++){
-                    encryptedPass[i] = Byte.valueOf(passwordBytes.get(i));
-                }
-                pass = Encryptor.decrypt(encryptedPass);
-                isAdmin = a;
-                if(isAdmin == 1)
-                    user = new User(em, pass, true);
-                else
-                    user = new User(em, pass, false);
+                User user = new User();
+                user.setEmail(scanner.next());
+                user.setAdmin(Boolean.parseBoolean(scanner.next()));
+                user.setPassword(getPassword(scanner));
                 userBase.addUser(user);
             }
         }
         catch(FileNotFoundException ex){
             System.out.println(ex.getMessage());
         }
-    };
+    }
+    private String getPassword(Scanner scanner){
+        List<Byte> passwordBytes = new ArrayList<>();
+        while(scanner.hasNextInt()) {
+            passwordBytes.add(Byte.valueOf(scanner.next()));
+        }
+        byte[] encryptedPass = new byte[passwordBytes.size()];
+        for(int i = 0; i < passwordBytes.size(); i++){
+            encryptedPass[i] = passwordBytes.get(i);
+        }
+        return Encryptor.decrypt(encryptedPass);
+    }
     public void downloadBooks(Catalog catalog){
         if(!bookFile.exists()) {
-            System.out.println("Файла книг не существует");
+            try {
+                if(usersFile.createNewFile())
+                    System.out.println("Файла с книгами не существует. Был создан новый пустой файл.");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         try(Scanner scanner = new Scanner(bookFile))
         {
@@ -92,21 +94,16 @@ public class FileManager {
         }
         try(FileWriter writer = new FileWriter(usersFile, true))
         {
-            if(usersFile.length() != 0L)
-                writer.append('\n');
-            writer.write(user.getEmail());
-            writer.append(' ');
+            writer.write(user.getEmail() + " ");
+            if(!user.isAdmin())
+                writer.write("false ");
+            else
+                writer.write("true ");
             byte[] encryptedPassword = Encryptor.encrypt(user.getPassword());
             for(byte b : encryptedPassword) {
-                writer.write(String.valueOf(b));
-                writer.append(' ');
+                writer.write(String.valueOf(b) + " ");
             }
-            writer.append(' ');
-            if(!user.isAdmin())
-                writer.append('0');
-            else
-                writer.append('1');
-            //writer.append(" ;");
+            writer.append('\n');
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
