@@ -6,6 +6,8 @@ package controller;
 import model.UserBase;
 import model.User;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -19,33 +21,43 @@ import javax.mail.internet.MimeMessage;
 
 
 public class EmailSender {
-    private String username;
-    private String password;
-    private Properties props;
+    private Properties sessionProps;
+    private Properties librarySenderProps;
     private static String smtp = "smtp.gmail.com";
     EmailSender(){
-        this.username = "...";
-        this.password = "...";//использовать app passwords google
-        props = new Properties();
+        sessionProps = new Properties();
+        librarySenderProps = new Properties();
     }
-    private void setProps(){
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.sendpartial", "true");//не работает
-        props.put("mail.smtp.host", smtp);
-        props.put("mail.smtp.port", "465");
+    public void setProps(){
+        try {
+            sessionProps.load(new FileInputStream("src/files/session.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            librarySenderProps.load(new FileInputStream("src/files/librarySender.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+/*        sessionProps.put("mail.smtp.auth", "true");
+        sessionProps.put("mail.smtp.socketFactory.port", "465");
+        sessionProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        sessionProps.put("mail.smtp.sendpartial", "true");//не работает
+        sessionProps.put("mail.smtp.host", smtp);
+        sessionProps.put("mail.smtp.port", "465");*/
     }
     public void send(String header, String text, UserBase to){
-        Session session = Session.getInstance(props, new Authenticator() {
+        Session session = Session.getInstance(sessionProps, new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
+                        return new PasswordAuthentication(librarySenderProps.getProperty("email"),
+                                librarySenderProps.getProperty("password"));
                     }
                 });
-        Message message = new MimeMessage(session);
+        Message message = null;
         try {
             message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
+            message.setFrom(new InternetAddress(librarySenderProps.getProperty("email")));
             message.setSubject(header);
             message.setText(text);
 
@@ -60,7 +72,8 @@ public class EmailSender {
             System.out.println("Сообщение отправлено!");
 
         } catch (MessagingException e) {
-            System.out.println("Ошибка отпраки email");
+            System.out.println(e);
+            System.out.println("Ошибка отправки email");
         }
 
 

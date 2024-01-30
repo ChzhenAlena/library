@@ -13,6 +13,7 @@ public class Library {
         fileManager = new FileManager();
         console = new ConsoleManager();
         emailSender = new EmailSender();
+        emailSender.setProps();
     }
 
     public void downloadData(){
@@ -37,7 +38,8 @@ public class Library {
     };
     public void addBook(){
         Book book = console.getBookFromConsole();
-        catalog.addBook(book);
+        if(!catalog.addBook(book))
+            System.out.println("Книга с таким названием уже есть в базе");
         fileManager.addBook(book);
         emailSender.send("Добавлена новая книга", book.toString(), userBase);
     };

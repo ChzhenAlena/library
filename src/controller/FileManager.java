@@ -67,8 +67,8 @@ public class FileManager {
         }
         try(Scanner scanner = new Scanner(bookFile))
         {
-            Book book = new Book();
             while(scanner.hasNext()){
+                Book book = new Book();
                 book.setType(Book.bookType.valueOf(scanner.next()));
                 book.setName(scanner.next());
                 book.setAuthor(scanner.next());

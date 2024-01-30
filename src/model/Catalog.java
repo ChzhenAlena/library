@@ -7,13 +7,12 @@ public class Catalog {
     public Catalog(){
         books = new ArrayList<>();
     }
-    public void addBook(Book book){
+    public boolean addBook(Book book){
         for(Book b : books)
-            if(b.getName().equals(book.getName())){
-                System.out.println("Книга с таким названием уже существует");
-                return;
-            }
+            if(b.getName().equals(book.getName()))
+                return false;
         books.add(book);
+        return true;
     }
     public void deleteBook(String bookName){
         books.remove(findBook(bookName));
